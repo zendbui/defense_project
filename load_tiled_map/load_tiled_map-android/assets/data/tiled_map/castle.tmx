@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="20" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="map_tiles_1_5" tilewidth="32" tileheight="32">
+  <image source="map_tiles_1_5.png" width="512" height="256"/>
+ </tileset>
+ <layer name="way" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBiaQItETK4+Ss0j1h/UAvQwj5Iwo6Z5uMKZ1DCgtnnE2kdt80gNJ3qZR4pdhAAA++4StQ==
+  </data>
+ </layer>
+ <layer name="rock" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJzTZWBg0B2CmFRArj5KzSPWH9QOF1qaRy6gtnnoZpMbBtQ2b6DiiBgwEOaRYhch9QAFFiCz
+  </data>
+ </layer>
+ <layer name="final" width="20" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIKBAVJomBAAABXAAGk=
+  </data>
+ </layer>
+ <layer name="noPass" width="20" height="15">
+  <properties>
+   <property name="block" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJyTZmBgkB6CmFRArj5KzSPWH9QOF1qaRy6gtnnoZpMbBtQ2b6DiiBgwEOaRYhch9QDRrhOf
+  </data>
+ </layer>
+</map>

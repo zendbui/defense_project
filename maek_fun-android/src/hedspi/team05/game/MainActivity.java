@@ -12,15 +12,6 @@ public class MainActivity extends AndroidApplication {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		DisplayMetrics displayMetrics = getApplicationContext().getResources()
-				.getDisplayMetrics();
-
-		int screenWidthInPix = displayMetrics.widthPixels;
-
-		int screenheightInPix = displayMetrics.heightPixels;
-		
-		Log.i("screen size in pixel", "width: " + screenWidthInPix + " -- height: " + screenheightInPix);
-
 		AndroidApplicationConfiguration cfg = new AndroidApplicationConfiguration();
 		cfg.useGL20 = true;
 		cfg.useAccelerometer = false;

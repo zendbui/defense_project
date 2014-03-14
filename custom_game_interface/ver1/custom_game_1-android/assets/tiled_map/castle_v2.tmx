@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="25" height="15" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="map_tiles_1_5" tilewidth="32" tileheight="32">
+  <image source="map_tiles_1_5.png" width="512" height="256"/>
+ </tileset>
+ <layer name="wall" width="25" height="15">
+  <properties>
+   <property name="block" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJzTZWBg0B3hmBCgtfnIdlAK8NlPTztoGU8jwQ5qAVqbT6wdwz2+BqMdANsTL3c=
+  </data>
+ </layer>
+ <layer name="direct_way" width="25" height="15">
+  <properties>
+   <property name="way" value="1"/>
+  </properties>
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFmgQwtewgRo6QW8h1K7X8gQ+M2jG07KA0rRGT5mjtz8EQjoPVDgD9egjQ
+  </data>
+ </layer>
+ <layer name="road" width="25" height="15">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFWgQwrc3XIlEtqW4dCDtoAUaSHZTGESE7qGU+sXbQCgyW+BqMdgAAJSgROw==
+  </data>
+ </layer>
+</map>
