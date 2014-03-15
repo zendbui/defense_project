@@ -29,7 +29,7 @@ public class BulletDrawer {
 		render.setColor(223, 0, 41, 1.0f);
 		while (iter.hasNext()) {
 			Bullet bullet = (Bullet) iter.next();
-			System.out.println("fire: " + bullet.getX() + ";" + bullet.getY());
+			//System.out.println("fire: " + bullet.getX() + ";" + bullet.getY());
 			render.circle(bullet.getX(), bullet.getY(), this.size);
 		}
 		render.end();
