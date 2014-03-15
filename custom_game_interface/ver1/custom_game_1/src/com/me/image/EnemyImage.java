@@ -313,5 +313,10 @@ public class EnemyImage extends Image {
 		}
 			
 	}
-	
+	public float getCenterX(){
+		return this.getX() + 16;
+	}
+	public float getCenterY(){
+		return this.getY() + 16;
+	}
 }

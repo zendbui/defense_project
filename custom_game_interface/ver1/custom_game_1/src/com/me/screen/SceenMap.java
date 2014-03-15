@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.TimeUtils;
+import com.me.image.BulletDrawer;
 import com.me.image.EnemyHealthDrawer;
 import com.me.image.EnemyImage;
 import com.me.image.TowerImage;
@@ -68,6 +69,9 @@ public class SceenMap extends BaseScreen {
 	ArrayList<TowerImage> ArrTower;
 	ArrayList<Point> listCurrTower;
 	TowerRangeDrawer towerRangeDrawer;
+
+	BulletDrawer bulletDrawer;
+
 	public SceenMap(DefenseGame game) {
 		super(game);
 	}
@@ -101,10 +105,12 @@ public class SceenMap extends BaseScreen {
 
 		ArrEnemy = new ArrayList<EnemyImage>();
 		healthdrawer = new EnemyHealthDrawer();
-		
+
 		ArrTower = new ArrayList<TowerImage>();
 		towerRangeDrawer = new TowerRangeDrawer();
-		createTower(1, 1, 1);
+		createTower(1, 8, 6);
+		bulletDrawer = new BulletDrawer();
+		
 		spawnEnemy();
 	}
 
@@ -463,6 +469,12 @@ public class SceenMap extends BaseScreen {
 
 		healthdrawer.draw(ArrEnemy, cam);
 		towerRangeDrawer.draw(ArrTower.get(0), cam);
+		Iterator<TowerImage> iterTower = ArrTower.iterator();
+		while (iterTower.hasNext()) {
+			TowerImage tower = (TowerImage) iterTower.next();
+			tower.fire(delta,ArrEnemy);
+			bulletDrawer.draw(tower.getArrBullet(), cam);
+		}
 	}
 
 }
