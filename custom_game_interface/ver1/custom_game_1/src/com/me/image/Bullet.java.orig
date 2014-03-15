@@ -6,9 +6,13 @@ public class Bullet {
 	float target_x;
 	float target_y;
 	float speed = 10.0f;
-	float range = 5.0f;
+	float range = 32.0f;
 	EnemyImage target;
+<<<<<<< Updated upstream
+
+=======
 	boolean  isShot = false;
+>>>>>>> Stashed changes
 	public Bullet(float x, float y, EnemyImage target) {
 		this.x = x;
 		this.y = y;
@@ -38,6 +42,7 @@ public class Bullet {
 	}
 
 	public void updateTarget() {
+<<<<<<< Updated upstream
 		// calculate new position
 		float distance = CalcDistance(this.x, this.y, this.target_x,
 				this.target_y);
@@ -54,11 +59,23 @@ public class Bullet {
 					/ (target_x - old_x) + old_y;
 		}
 
+=======
+		this.x =(this.x + target.getCenterX())/2+speed;
+		this.y =(this.y + target.getCenterY())/2+speed;
 		
+>>>>>>> Stashed changes
 		this.target_x = target.getCenterX();
 		this.target_y = target.getCenterY();
 
 	}
+<<<<<<< Updated upstream
+
+	public boolean isShot() {
+		if (CalcDistance(this.x, this.y, this.target_x, this.target_y) < range) {
+			return true;
+		} else {
+			return false;
+=======
 	public boolean isShot(){
 		if (isShot) {
 			return true;
@@ -67,6 +84,7 @@ public class Bullet {
 			isShot = true;
 		}else{
 			isShot = false;
+>>>>>>> Stashed changes
 		}
 		return isShot;
 	}

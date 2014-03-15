@@ -14,7 +14,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -65,13 +64,13 @@ public class SceenMap extends BaseScreen {
 	boolean onTower;
 	long timeBlend;
 	float currOpa;
-
+	float minOpa =0.5f;
 	ArrayList<TowerImage> ArrTower;
 	ArrayList<Point> listCurrTower;
 	TowerRangeDrawer towerRangeDrawer;
 
 	BulletDrawer bulletDrawer;
-
+	
 	public SceenMap(DefenseGame game) {
 		super(game);
 	}
@@ -108,9 +107,8 @@ public class SceenMap extends BaseScreen {
 
 		ArrTower = new ArrayList<TowerImage>();
 		towerRangeDrawer = new TowerRangeDrawer();
-		createTower(1, 8, 6);
 		bulletDrawer = new BulletDrawer();
-		
+
 		spawnEnemy();
 	}
 
@@ -136,6 +134,9 @@ public class SceenMap extends BaseScreen {
 				int rowTower = (int) y / 32;
 				System.out.println("1up at postion " + x + ";" + y + "==> col:"
 						+ colTower + "|row:" + rowTower);
+				if (onTowerDrag) {
+					createTower(1, colTower, rowTower);
+				}
 				onTowerDrag = false;
 			}
 
@@ -423,7 +424,7 @@ public class SceenMap extends BaseScreen {
 	@Override
 	public void render(float delta) {
 
-		if (TimeUtils.nanoTime() - lastEnemySpawnTime > 1000000000) {
+		if (TimeUtils.nanoTime() - lastEnemySpawnTime > 2000000000) {
 			spawnEnemy();
 		}
 		Iterator<EnemyImage> iter = ArrEnemy.iterator();
@@ -438,7 +439,7 @@ public class SceenMap extends BaseScreen {
 
 		if (TimeUtils.nanoTime() - timeBlend > 100000000) {
 			timeBlend = TimeUtils.nanoTime();
-			if (currOpa > 0.2f) {
+			if (currOpa > minOpa) {
 				currOpa -= 0.01f;
 				if (onTower) {
 					setTowerDisplay(currOpa);
@@ -463,16 +464,16 @@ public class SceenMap extends BaseScreen {
 		this.getBatch().begin();
 		this.getFont().draw(this.getBatch(), "10 life", 40, 470);
 		if (onTowerDrag) {
-			getBatch().draw(towerImage, towerX, towerY, 64, 64);
+			getBatch().draw(towerImage, towerX, towerY, 32, 32);
 		}
 		this.getBatch().end();
 
 		healthdrawer.draw(ArrEnemy, cam);
-		towerRangeDrawer.draw(ArrTower.get(0), cam);
 		Iterator<TowerImage> iterTower = ArrTower.iterator();
 		while (iterTower.hasNext()) {
 			TowerImage tower = (TowerImage) iterTower.next();
-			tower.fire(delta,ArrEnemy);
+			towerRangeDrawer.draw(tower, cam);
+			tower.fire(delta, ArrEnemy);
 			bulletDrawer.draw(tower.getArrBullet(), cam);
 		}
 	}
