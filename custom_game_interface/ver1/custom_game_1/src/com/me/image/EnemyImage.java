@@ -10,7 +10,6 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.me.image.MyAtlasRegion;
-import com.me.screen.BaseScreen;
 
 public class EnemyImage extends Image {
 	public final static int UP = 0;
@@ -48,7 +47,10 @@ public class EnemyImage extends Image {
 	TiledMapRenderer tileMapRenderer;
 	TiledMapTileLayer passLayer;
 	MapLayer layer;
-
+	
+	float originHealth=100;
+	float currHealth=100;
+	
 	public EnemyImage(TextureAtlas atlas) {
 		super(atlas.findRegion("anim/phai", 1));
 
@@ -239,8 +241,6 @@ public class EnemyImage extends Image {
 			} catch (Exception e) {
 				int newDirection = changeDirection();
 				setDirection(newDirection);
-				Gdx.app.log("change direction", newDirection + " at point " + x
-						+ ";" + y + " v[" + i + "]:" + v[i].x + ";" + v[i].y);
 				setStand(true);
 				return false;
 			}
@@ -270,7 +270,6 @@ public class EnemyImage extends Image {
 					passLayer.getCell(colleft, row).getTile().getProperties();
 					return LEFT;
 				} catch (Exception e2) {
-					Gdx.app.log("", "end");
 					setSuccess(true);
 					return -1;
 				}
@@ -302,4 +301,17 @@ public class EnemyImage extends Image {
 		}
 		return -1;
 	}
+	
+	public float getHealthyRate(){
+		return (float)currHealth/originHealth;
+	}
+	public boolean isAlive(){
+		if (currHealth>0) {
+			return true;
+		}else{
+			return false;
+		}
+			
+	}
+	
 }
