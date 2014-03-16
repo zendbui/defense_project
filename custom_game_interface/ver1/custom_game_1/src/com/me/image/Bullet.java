@@ -5,7 +5,7 @@ public class Bullet {
 	float y;
 	float target_x;
 	float target_y;
-	float speed = 10.0f;
+	float speed = 5.0f;
 	float range = 5.0f;
 	float bulletDamage = 10f;
 	EnemyImage target;

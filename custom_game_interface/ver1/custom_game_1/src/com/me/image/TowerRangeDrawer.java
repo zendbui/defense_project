@@ -14,6 +14,9 @@ public class TowerRangeDrawer {
 	}
 
 	public void draw(TowerImage tower, Camera camera) {
+		if (tower == null) {
+			return;
+		}
 		Gdx.gl.glEnable(GL20.GL_BLEND);
 		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 		render.setProjectionMatrix(camera.combined);

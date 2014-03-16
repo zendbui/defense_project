@@ -1,6 +1,5 @@
 package com.me.image;
 
-import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
 
@@ -8,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 
 public class TowerImage extends Image {
+	protected int TYPE;
+	
 	final static int HEIGHT = 32;
 	final static int WIDTH = 32;
 	protected int level;
@@ -22,16 +23,24 @@ public class TowerImage extends Image {
 
 	float centerX;
 	float centerY;
-
+	int col;
+	int row;
 	public void setAttributes(int level) {
 
 	}
 
-	public TowerImage(TextureAtlas atlas, int col, int row) {
+	public TowerImage(TextureAtlas atlas, int type,int col, int row) {
+		
 		super(atlas.findRegion("anim/phai", 1));
+		
+		this.TYPE = type;
 
 		this.setSize(32, 32);
 		this.setPosition(col * 32, row * 32);
+		
+		this.col = col;
+		this.row = row;
+		
 		centerX = col * 32 + 16;
 		centerY = row * 32 + 16;
 		
@@ -49,7 +58,14 @@ public class TowerImage extends Image {
 	public void upgrade() {
 
 	}
-
+	
+	public int getCol(){
+		return this.col;
+	}
+	public int getRow(){
+		return this.row;
+	}
+	
 	public float getRange() {
 		return this.range;
 	}
@@ -65,7 +81,7 @@ public class TowerImage extends Image {
 			if (currTarget == null) {
 				currTarget = findTarget(arr);
 			}else if (CalcDistance(this.centerX, this.centerY,
-		    currTarget.getCenterX(), currTarget.getCenterY()) > this.range) {
+		    currTarget.getCenterX(), currTarget.getCenterY()) > this.range || !this.currTarget.isAlive()) {
 				// find new target
 				currTarget = findTarget(arr);
 			}
@@ -103,4 +119,6 @@ public class TowerImage extends Image {
 	public ArrayList<Bullet> getArrBullet(){
 		return this.listBullet;
 	}
+	
+	
 }

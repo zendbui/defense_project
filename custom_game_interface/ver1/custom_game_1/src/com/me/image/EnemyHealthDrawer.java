@@ -27,7 +27,7 @@ public class EnemyHealthDrawer {
 						BAR_WIDTH, BAR_HEIGHT);
 				render.setColor(Color.GREEN);
 				render.rect(m.getX() + 5, m.getY() + m.getHeight() + 5,
-						BAR_WIDTH * m.getHealthyRate()*0.5f, BAR_HEIGHT);
+						BAR_WIDTH * m.getHealthyRate(), BAR_HEIGHT);
 			}
 		}
 		render.end();

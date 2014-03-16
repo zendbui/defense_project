@@ -1,0 +1,47 @@
+
+monster.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+A1
+  rotate: false
+  xy: 1, 136
+  size: 55, 66
+  orig: 55, 66
+  offset: 0, 0
+  index: 1
+A1
+  rotate: false
+  xy: 1, 69
+  size: 55, 65
+  orig: 55, 65
+  offset: 0, 0
+  index: 6
+A1
+  rotate: false
+  xy: 58, 137
+  size: 55, 65
+  orig: 55, 65
+  offset: 0, 0
+  index: 5
+A1
+  rotate: false
+  xy: 1, 2
+  size: 55, 65
+  orig: 55, 65
+  offset: 0, 0
+  index: 3
+A1
+  rotate: false
+  xy: 58, 70
+  size: 55, 65
+  orig: 55, 65
+  offset: 0, 0
+  index: 2
+A1
+  rotate: false
+  xy: 58, 1
+  size: 53, 67
+  orig: 53, 67
+  offset: 0, 0
+  index: 4

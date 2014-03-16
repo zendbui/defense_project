@@ -8,7 +8,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -21,6 +24,7 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.me.image.BulletDrawer;
 import com.me.image.EnemyHealthDrawer;
 import com.me.image.EnemyImage;
+import com.me.image.Monster;
 import com.me.image.TowerImage;
 import com.me.image.TowerRangeDrawer;
 import com.me.mygdxgame.DefenseGame;
@@ -49,7 +53,7 @@ public class SceenMap extends BaseScreen {
 	Image buildingChooser;
 	boolean onTowerDrag = false;
 	Texture towerImage;
-	Texture currDrag;
+	Texture currDrag;// not use
 
 	Image tower1;
 	Image tower2;
@@ -61,6 +65,10 @@ public class SceenMap extends BaseScreen {
 	Image build3;
 	Image build4;
 
+	Image sell;
+	Image upgrade;
+	Image max_upgrade;
+
 	boolean onTower;
 	long timeBlend;
 	float currOpa;
@@ -68,8 +76,11 @@ public class SceenMap extends BaseScreen {
 	ArrayList<TowerImage> ArrTower;
 	ArrayList<Point> listCurrTower;
 	TowerRangeDrawer towerRangeDrawer;
+	TowerImage currChoseTower;
+	ShapeRenderer renderTowerFoot;
 
 	BulletDrawer bulletDrawer;
+	Monster monster;
 
 	public SceenMap(DefenseGame game) {
 		super(game);
@@ -91,9 +102,6 @@ public class SceenMap extends BaseScreen {
 		cam.setToOrtho(false, displayWidth, displayHeight);
 		cam.update();
 
-		// camController = new OrthoCamController(cam);
-		// Gdx.input.setInputProcessor(camController);
-
 		tiledMap = new TmxMapLoader().load("tiled_map/castle_v2.tmx");
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		passLayer = (TiledMapTileLayer) tiledMap.getLayers().get(1);
@@ -114,7 +122,57 @@ public class SceenMap extends BaseScreen {
 		towerRangeDrawer = new TowerRangeDrawer();
 		bulletDrawer = new BulletDrawer();
 
+		renderTowerFoot = new ShapeRenderer();
+		createTowerAbilityImage();
+
 		spawnEnemy();
+		// monster = new Monster(new
+		// TextureAtlas(Gdx.files.internal("monster/monster.txt")));
+		// monster.setTileMap(tiledMap, tileMapRenderer, passLayer);
+		// stage.addActor(monster);
+	}
+
+	private void createTowerAbilityImage() {
+		sell = new Image(new Texture(Gdx.files.internal("image/badge1.png")));
+		sell.setSize(32, 32);
+		sell.setVisible(false);
+		sell.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("sell: " + x + ";" + y);
+				return true;
+
+			}
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("sell");
+			}
+		});
+
+		upgrade = new Image(new Texture(Gdx.files.internal("image/badge5.png")));
+		upgrade.setSize(32, 32);
+		upgrade.setVisible(false);
+		upgrade.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("upgrade: " + x + ";" + y);
+				return true;
+
+			}
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("upgrade");
+			}
+		});
+
+		max_upgrade = new Image(new Texture(
+				Gdx.files.internal("image/badge1.png")));
+		max_upgrade.setSize(32, 32);
+		max_upgrade.setVisible(false);
+
+		stage.addActor(sell);
+		stage.addActor(upgrade);
+		stage.addActor(max_upgrade);
 	}
 
 	private void createTowerChooser() {
@@ -135,27 +193,13 @@ public class SceenMap extends BaseScreen {
 
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
-				int colTower = (int) (x + 736) / 32;
-				int rowTower = (int) y / 32;
-				System.out.println("1up at postion " + x + ";" + y + "==> col:"
-						+ colTower + "|row:" + rowTower);
-				if (onTowerDrag) {
-					createTower(1, colTower, rowTower);
-				}
-				onTowerDrag = false;
+
 			}
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
-				System.out.println("tower drag pos:" + x + ";" + y);
-				if (x > 0 && x < 64 && y > 0 && y < 64) {
-					onTowerDrag = false;
-				} else {
-					towerX = x + 736 - 16;
-					towerY = y - 16;
-					onTowerDrag = true;
-				}
+
 				super.touchDragged(event, x, y, pointer);
 			}
 		});
@@ -173,11 +217,24 @@ public class SceenMap extends BaseScreen {
 
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				int colTower = (int) (x + 800 - 64 * 5 - 40) / 32;
+				int rowTower = (int) y / 32;
+				if (onTowerDrag) {
+					createTower(1, colTower, rowTower);
+				}
+				onTowerDrag = false;
 			}
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
+				if (x > 0 && x < 64 && y > 0 && y < 64) {
+					onTowerDrag = false;
+				} else {
+					towerX = x + 800 - 64 * 5 - 40 - 16;
+					towerY = y - 16;
+					onTowerDrag = true;
+				}
 				super.touchDragged(event, x, y, pointer);
 			}
 		});
@@ -194,11 +251,24 @@ public class SceenMap extends BaseScreen {
 
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				int colTower = (int) (x + 800 - 64 * 4 - 30) / 32;
+				int rowTower = (int) y / 32;
+				if (onTowerDrag) {
+					createTower(2, colTower, rowTower);
+				}
+				onTowerDrag = false;
 			}
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
+				if (x > 0 && x < 64 && y > 0 && y < 64) {
+					onTowerDrag = false;
+				} else {
+					towerX = x + 800 - 64 * 4 - 30 - 16;
+					towerY = y - 16;
+					onTowerDrag = true;
+				}
 				super.touchDragged(event, x, y, pointer);
 			}
 		});
@@ -215,11 +285,24 @@ public class SceenMap extends BaseScreen {
 
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				int colTower = (int) (x + 800 - 64 * 3 - 20) / 32;
+				int rowTower = (int) y / 32;
+				if (onTowerDrag) {
+					createTower(3, colTower, rowTower);
+				}
+				onTowerDrag = false;
 			}
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
+				if (x > 0 && x < 64 && y > 0 && y < 64) {
+					onTowerDrag = false;
+				} else {
+					towerX = x + 800 - 64 * 3 - 20 - 16;
+					towerY = y - 16;
+					onTowerDrag = true;
+				}
 				super.touchDragged(event, x, y, pointer);
 			}
 		});
@@ -236,11 +319,24 @@ public class SceenMap extends BaseScreen {
 
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
+				int colTower = (int) (x + 800 - 64 * 2 - 10) / 32;
+				int rowTower = (int) y / 32;
+				if (onTowerDrag) {
+					createTower(4, colTower, rowTower);
+				}
+				onTowerDrag = false;
 			}
 
 			@Override
 			public void touchDragged(InputEvent event, float x, float y,
 					int pointer) {
+				if (x > 0 && x < 64 && y > 0 && y < 64) {
+					onTowerDrag = false;
+				} else {
+					towerX = x + 800 - 64 * 2 - 10 - 16;
+					towerY = y - 16;
+					onTowerDrag = true;
+				}
 				super.touchDragged(event, x, y, pointer);
 			}
 		});
@@ -274,12 +370,6 @@ public class SceenMap extends BaseScreen {
 				System.out.println("2up");
 			}
 
-			// @Override
-			// public void touchDragged(InputEvent event, float x, float y,
-			// int pointer) {
-			// System.out.println("building drag pos:" + x + ";" + y);
-			// super.touchDragged(event, x, y, pointer);
-			// }
 		});
 
 		build1 = new Image(new Texture(Gdx.files.internal("image/badge4.png")));
@@ -417,9 +507,38 @@ public class SceenMap extends BaseScreen {
 	}
 
 	public void createTower(int type, int col, int row) {
-		TowerImage tower = new TowerImage(getAtlas(), col, row);
+		// check valid position
+		if (!checkTowerPosition(col, row)) {
+			System.out.println("duplicate tower");
+			return;
+		}
+
+		// create tower
+		final TowerImage tower = new TowerImage(getAtlas(), type, col, row);
+		tower.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				if (currChoseTower == null) {
+					currChoseTower = tower;
+				} else if (currChoseTower.equals(tower)) {
+					currChoseTower = null;
+				} else {
+					currChoseTower = tower;
+				}
+				return false;
+			}
+		});
 		ArrTower.add(tower);
 		stage.addActor(tower);
+	}
+
+	public boolean checkTowerPosition(int col, int row) {
+		for (TowerImage tower : ArrTower) {
+			if (tower.getCol() == col && tower.getRow() == row) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void createBuilding() {
@@ -463,7 +582,30 @@ public class SceenMap extends BaseScreen {
 		tileMapRenderer.setView(cam);
 		tileMapRenderer.render();
 
+		if (currChoseTower != null) {
+			sell.setVisible(true);
+			sell.setPosition(32, 32);
+			upgrade.setVisible(true);
+			upgrade.setPosition(96, 96);
+		} else {
+			sell.setVisible(false);
+			upgrade.setVisible(false);
+		}
+
 		stage.draw();
+
+		if (onTowerDrag) {
+			int start_x = ((int) (towerX + 16) / 32) * 32;
+			int start_y = ((int) (towerY + 16) / 32) * 32;
+			Gdx.gl.glEnable(GL20.GL_BLEND);
+			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+			renderTowerFoot.setProjectionMatrix(cam.combined);
+			renderTowerFoot.begin(ShapeType.Filled);
+			renderTowerFoot.setColor(1, 0, 0, 0.4f);
+			renderTowerFoot.rect(start_x, start_y, 32, 32);
+			renderTowerFoot.end();
+			Gdx.gl.glDisable(GL20.GL_BLEND);
+		}
 
 		this.getBatch().setProjectionMatrix(cam.combined);
 		this.getBatch().begin();
@@ -477,9 +619,12 @@ public class SceenMap extends BaseScreen {
 		Iterator<TowerImage> iterTower = ArrTower.iterator();
 		while (iterTower.hasNext()) {
 			TowerImage tower = (TowerImage) iterTower.next();
-			towerRangeDrawer.draw(tower, cam);
 			tower.fire(delta, ArrEnemy);
 			bulletDrawer.draw(tower.getArrBullet(), cam);
+		}
+
+		if (currChoseTower != null) {
+			towerRangeDrawer.draw(currChoseTower, cam);
 		}
 	}
 
