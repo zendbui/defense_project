@@ -64,15 +64,20 @@ public class SceenMap extends BaseScreen {
 	boolean onTower;
 	long timeBlend;
 	float currOpa;
-	float minOpa =0.5f;
+	float minOpa = 0.5f;
 	ArrayList<TowerImage> ArrTower;
 	ArrayList<Point> listCurrTower;
 	TowerRangeDrawer towerRangeDrawer;
 
 	BulletDrawer bulletDrawer;
-	
+
 	public SceenMap(DefenseGame game) {
 		super(game);
+	}
+
+	@Override
+	public void resize(int width, int height) {
+		stage.setViewport(800, 480, false);
 	}
 
 	@Override

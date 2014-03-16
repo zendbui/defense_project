@@ -47,10 +47,10 @@ public class EnemyImage extends Image {
 	TiledMapRenderer tileMapRenderer;
 	TiledMapTileLayer passLayer;
 	MapLayer layer;
-	
-	float originHealth=100;
-	float currHealth=100;
-	
+
+	float originHealth = 100;
+	float currHealth = 100;
+
 	public EnemyImage(TextureAtlas atlas) {
 		super(atlas.findRegion("anim/phai", 1));
 
@@ -113,9 +113,11 @@ public class EnemyImage extends Image {
 	public boolean isSuccess() {
 		return success;
 	}
-	private void setSuccess(boolean success){
+
+	private void setSuccess(boolean success) {
 		this.success = success;
 	}
+
 	public void setFast() {
 		speed = FAST;
 		FrameDura = F_FrameDura;
@@ -190,12 +192,12 @@ public class EnemyImage extends Image {
 	}
 
 	private boolean isPass() {
-		
+
 		if (success) {
 			Gdx.app.log("success", "finish job");
 			return false;
 		}
-		
+
 		float x = this.getX();
 		float y = this.getY();
 
@@ -301,22 +303,36 @@ public class EnemyImage extends Image {
 		}
 		return -1;
 	}
-	
-	public float getHealthyRate(){
-		return (float)currHealth/originHealth;
+
+	public float getHealthyRate() {
+		return (float) currHealth / originHealth;
 	}
-	public boolean isAlive(){
-		if (currHealth>0) {
+
+	public float getHelthy() {
+		return currHealth;
+	}
+
+	public void hit(float damage) {
+		currHealth -= damage;
+		if (currHealth < 0) {
+			currHealth = 0.0f;
+		}
+	}
+
+	public boolean isAlive() {
+		if (currHealth > 0) {
 			return true;
-		}else{
+		} else {
 			return false;
 		}
-			
+
 	}
-	public float getCenterX(){
+
+	public float getCenterX() {
 		return this.getX() + 16;
 	}
-	public float getCenterY(){
+
+	public float getCenterY() {
 		return this.getY() + 16;
 	}
 }

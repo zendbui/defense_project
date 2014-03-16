@@ -7,8 +7,10 @@ public class Bullet {
 	float target_y;
 	float speed = 10.0f;
 	float range = 5.0f;
+	float bulletDamage = 10f;
 	EnemyImage target;
-	boolean  isShot = false;
+	boolean isShot = false;
+
 	public Bullet(float x, float y, EnemyImage target) {
 		this.x = x;
 		this.y = y;
@@ -43,29 +45,30 @@ public class Bullet {
 				this.target_y);
 		float old_x = this.x;
 		float old_y = this.y;
-//		System.out.println(x + ":" + y + ":" + speed + ":" + distance);
-//		System.out.println(target_x + ":" + target_y);
+		// System.out.println(x + ":" + y + ":" + speed + ":" + distance);
+		// System.out.println(target_x + ":" + target_y);
 		if (distance < speed) {
 			this.x = target_x;
 			this.y = target_y;
 		} else {
 			this.x = old_x + speed * (target_x - old_x) / distance;
-			this.y = (this.x - old_x) * (target_y - old_y)
-					/ (target_x - old_x) + old_y;
+			this.y = (this.x - old_x) * (target_y - old_y) / (target_x - old_x)
+					+ old_y;
 		}
 
-		
 		this.target_x = target.getCenterX();
 		this.target_y = target.getCenterY();
 
 	}
-	public boolean isShot(){
+
+	public boolean isShot() {
 		if (isShot) {
 			return true;
 		}
-		if (CalcDistance(this.x,this.y,this.target_x,this.target_y) < range) {
+		if (CalcDistance(this.x, this.y, this.target_x, this.target_y) < range) {
+			this.target.hit(bulletDamage);
 			isShot = true;
-		}else{
+		} else {
 			isShot = false;
 		}
 		return isShot;
