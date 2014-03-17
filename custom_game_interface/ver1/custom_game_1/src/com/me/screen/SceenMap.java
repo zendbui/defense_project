@@ -30,7 +30,9 @@ import com.me.image.TowerRangeDrawer;
 import com.me.mygdxgame.DefenseGame;
 
 public class SceenMap extends BaseScreen {
-
+	
+	boolean onPause=false;
+	
 	ArrayList<EnemyImage> ArrEnemy;
 	long lastEnemySpawnTime;
 	EnemyHealthDrawer healthdrawer;
@@ -143,9 +145,15 @@ public class SceenMap extends BaseScreen {
 				return true;
 
 			}
+
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				System.out.println("sell");
+				if (currChoseTower != null) {
+					ArrTower.remove(currChoseTower);
+					stage.getRoot().removeActor(currChoseTower);
+					currChoseTower = null;
+				}
 			}
 		});
 
@@ -159,9 +167,13 @@ public class SceenMap extends BaseScreen {
 				return true;
 
 			}
+
 			public void touchUp(InputEvent event, float x, float y,
 					int pointer, int button) {
 				System.out.println("upgrade");
+				if (currChoseTower != null) {
+					currChoseTower.upgrade(currChoseTower.getLevel() + 1);
+				}
 			}
 		});
 
@@ -533,6 +545,9 @@ public class SceenMap extends BaseScreen {
 	}
 
 	public boolean checkTowerPosition(int col, int row) {
+
+		// TODO: check tiled map
+
 		for (TowerImage tower : ArrTower) {
 			if (tower.getCol() == col && tower.getRow() == row) {
 				return false;
@@ -544,10 +559,61 @@ public class SceenMap extends BaseScreen {
 	public void createBuilding() {
 
 	}
+	public void setTowerFunction(boolean show){
+		if (!show) {
+			sell.setVisible(false);
+			upgrade.setVisible(false);
+			return ;
+		}
+		
+		if (currChoseTower != null) {
+			int sellCol = currChoseTower.getCol() * 32;
+			int sellRow = currChoseTower.getRow() * 32;
+			int upgradeCol = currChoseTower.getCol() * 32;
+			int upgradeRow = currChoseTower.getRow() * 32;
+			sell.setVisible(true);
+			upgrade.setVisible(true);
+			if (currChoseTower.getCol() == 0) {
+				if (currChoseTower.getRow() == 14) {
+					sell.setPosition(sellCol, sellRow - 32);
+					upgrade.setPosition(upgradeCol + 32, upgradeRow);
+				} else {
+					sell.setPosition(sellCol, sellRow + 32);
+					upgrade.setPosition(upgradeCol + 32, upgradeRow);
+				}
+			} else if (currChoseTower.getCol() == 24) {
+				if (currChoseTower.getRow() == 14) {
+					sell.setPosition(sellCol - 32, sellRow);
+					upgrade.setPosition(upgradeCol, upgradeRow - 32);
+				} else {
+					sell.setPosition(sellCol - 32, sellRow);
+					upgrade.setPosition(upgradeCol, upgradeRow + 32);
+				}
+			} else {
+				sell.setPosition(sellCol - 32, sellRow);
+				upgrade.setPosition(upgradeCol + 32, upgradeRow);
+			}
 
+		} else {
+			sell.setVisible(false);
+			upgrade.setVisible(false);
+		}
+	}
 	@Override
 	public void render(float delta) {
+		
+		if (onPause) {
+			cam.update();
 
+			tileMapRenderer.setView(cam);
+			tileMapRenderer.render();
+
+			setTowerFunction(false);
+
+			stage.draw();
+			return;
+		}
+		
 		if (TimeUtils.nanoTime() - lastEnemySpawnTime > 2000000000) {
 			spawnEnemy();
 		}
@@ -556,8 +622,14 @@ public class SceenMap extends BaseScreen {
 			EnemyImage enemy = (EnemyImage) iter.next();
 			enemy.Walking(delta);
 			if (enemy.isSuccess() || !enemy.isAlive()) {
+				if (enemy.isSuccess()) {
+					// TODO: life lost
+				}else {
+					// TODO: gold bonus
+				}
 				stage.getRoot().removeActor(enemy);
 				iter.remove();
+				
 			}
 		}
 
@@ -582,15 +654,7 @@ public class SceenMap extends BaseScreen {
 		tileMapRenderer.setView(cam);
 		tileMapRenderer.render();
 
-		if (currChoseTower != null) {
-			sell.setVisible(true);
-			sell.setPosition(32, 32);
-			upgrade.setVisible(true);
-			upgrade.setPosition(96, 96);
-		} else {
-			sell.setVisible(false);
-			upgrade.setVisible(false);
-		}
+		setTowerFunction(true);
 
 		stage.draw();
 
@@ -627,5 +691,4 @@ public class SceenMap extends BaseScreen {
 			towerRangeDrawer.draw(currChoseTower, cam);
 		}
 	}
-
 }

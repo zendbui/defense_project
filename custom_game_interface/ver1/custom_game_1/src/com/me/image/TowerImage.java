@@ -11,7 +11,8 @@ public class TowerImage extends Image {
 	
 	final static int HEIGHT = 32;
 	final static int WIDTH = 32;
-	protected int level;
+	protected int level = 0;
+	protected int maxLevel = 1;
 	protected float range = 100.0f;
 	protected int cost = 100;
 	protected int damage = 10;
@@ -54,9 +55,14 @@ public class TowerImage extends Image {
 	public void sold() {
 
 	}
-
-	public void upgrade() {
-
+	public int getLevel(){
+		return this.level;
+	}
+	public void upgrade(int level) {
+		if (level > maxLevel) {
+			return;
+		}
+		setAttributes(level);
 	}
 	
 	public int getCol(){
@@ -109,11 +115,9 @@ public class TowerImage extends Image {
 		while (iter.hasNext()) {
 			EnemyImage enemy = (EnemyImage) iter.next();
 			if (CalcDistance(centerX, centerY, enemy.getCenterX(), enemy.getCenterY()) < this.range) {
-				System.out.println("new target");
 				return enemy;
 			}
 		}
-		System.out.println("no target");
 		return null;
 	}
 	public ArrayList<Bullet> getArrBullet(){
