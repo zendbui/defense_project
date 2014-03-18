@@ -5,15 +5,17 @@ public class Bullet {
 	float y;
 	float target_x;
 	float target_y;
-	float speed = 5.0f;
+	float speed;
 	float range = 5.0f;
-	float bulletDamage = 10f;
+	float bulletDamage;
 	EnemyImage target;
 	boolean isShot = false;
 
-	public Bullet(float x, float y, EnemyImage target) {
+	public Bullet(float x, float y, float dam, float speed, EnemyImage target) {
 		this.x = x;
 		this.y = y;
+		this.bulletDamage = dam;
+		this.speed = speed;
 		this.target = target;
 		this.target_x = target.getCenterX();
 		this.target_y = target.getCenterY();
@@ -38,15 +40,16 @@ public class Bullet {
 	public void updateSpeed(float speed) {
 		this.speed = speed;
 	}
-
+	public void updateDamage(float dam){
+		this.bulletDamage = dam;
+	}
 	public void updateTarget() {
 		// calculate new position
 		float distance = CalcDistance(this.x, this.y, this.target_x,
 				this.target_y);
 		float old_x = this.x;
 		float old_y = this.y;
-		// System.out.println(x + ":" + y + ":" + speed + ":" + distance);
-		// System.out.println(target_x + ":" + target_y);
+		
 		if (distance < speed) {
 			this.x = target_x;
 			this.y = target_y;

@@ -8,7 +8,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
@@ -19,7 +18,9 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Window.WindowStyle;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.me.image.BulletDrawer;
 import com.me.image.EnemyHealthDrawer;
@@ -30,9 +31,22 @@ import com.me.image.TowerRangeDrawer;
 import com.me.mygdxgame.DefenseGame;
 
 public class SceenMap extends BaseScreen {
-	
-	boolean onPause=false;
-	
+	// menu
+	Image pause;
+	Image play;
+	Dialog dialogMenu;
+	Image resume;
+	Image restart;
+	Image quit;
+	boolean onPause = false;
+	boolean onRestart = false;
+
+	// Player attribute
+	int originLive = 10;
+	int originGold = 1000;
+	int currGold;
+	int currLive;
+
 	ArrayList<EnemyImage> ArrEnemy;
 	long lastEnemySpawnTime;
 	EnemyHealthDrawer healthdrawer;
@@ -42,6 +56,7 @@ public class SceenMap extends BaseScreen {
 	TiledMapRenderer tileMapRenderer;
 
 	TiledMapTileLayer passLayer;
+	TiledMapTileLayer buildLayer;
 
 	OrthographicCamera cam;
 	OrthoCamController camController;
@@ -55,7 +70,6 @@ public class SceenMap extends BaseScreen {
 	Image buildingChooser;
 	boolean onTowerDrag = false;
 	Texture towerImage;
-	Texture currDrag;// not use
 
 	Image tower1;
 	Image tower2;
@@ -107,6 +121,7 @@ public class SceenMap extends BaseScreen {
 		tiledMap = new TmxMapLoader().load("tiled_map/castle_v2.tmx");
 		tileMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 		passLayer = (TiledMapTileLayer) tiledMap.getLayers().get(1);
+		buildLayer = (TiledMapTileLayer) tiledMap.getLayers().get(0);
 		tiledMap.getLayers().remove(1);
 
 		towerImage = new Texture(Gdx.files.internal("image/badge1.png"));
@@ -128,20 +143,140 @@ public class SceenMap extends BaseScreen {
 		createTowerAbilityImage();
 
 		spawnEnemy();
-		// monster = new Monster(new
-		// TextureAtlas(Gdx.files.internal("monster/monster.txt")));
-		// monster.setTileMap(tiledMap, tileMapRenderer, passLayer);
-		// stage.addActor(monster);
+		
+//		 monster = new Monster(new
+//		 TextureAtlas(Gdx.files.internal("monster/monster.txt")));
+//		 monster.setTileMap(tiledMap, tileMapRenderer, passLayer);
+//		 stage.addActor(monster);
+
+		createMenu();
+
+		createPlayerAttr(originLive, originGold);
+	}
+
+	private void createPlayerAttr(int live, int money) {
+		this.currLive = live;
+		this.currGold = money;
+	}
+
+	private Dialog createDialog() {
+		// TODO: check position
+		WindowStyle winstyle = new WindowStyle();
+		winstyle.titleFont = getFont();
+		Dialog dialog = new Dialog("Pause", winstyle);
+		int group_x = 330;
+		int group_y = 150;
+		dialog.setPosition(group_x, group_y);
+
+		resume = new Image(new Texture(Gdx.files.internal("image/resume.png")));
+		resume.setPosition(group_x + 20, group_y + 20 );
+		resume.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("resume game");
+				return true;
+			}
+
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				onPause = false;
+				if (dialogMenu != null) {
+					dialogMenu.remove();
+					dialogMenu = null;
+				}
+			}
+		});
+		restart = new Image(
+				new Texture(Gdx.files.internal("image/restart.png")));
+		restart.setPosition(group_x + 20, group_y +20);
+		restart.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("restart game");
+				return true;
+			}
+
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				onPause = false;
+				if (dialogMenu != null) {
+					dialogMenu.remove();
+					dialogMenu = null;
+				}
+				restartGame();
+			}
+		});
+		quit = new Image(new Texture(Gdx.files.internal("image/quit.png")));
+		quit.setPosition(group_x + 20, group_y + 20);
+
+		dialog.add(resume);
+		dialog.add(restart);
+		dialog.add(quit);
+
+		return dialog;
+
+	}
+	private void restartGame(){
+//		this.ArrEnemy = new ArrayList<EnemyImage>();
+//		this.ArrTower = new ArrayList<TowerImage>();
+//		createPlayerAttr(20, 1000);
+		
+	}
+	private void createMenu() {
+		pause = new Image(new Texture(Gdx.files.internal("image/pause.png")));
+		pause.setSize(32, 32);
+		pause.setPosition(0, 0);
+		pause.setVisible(true);
+		pause.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("pause game");
+				return true;
+			}
+
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				onPause = true;
+				pause.setVisible(false);
+				play.setVisible(true);
+				dialogMenu = createDialog();
+				stage.addActor(dialogMenu);
+			}
+		});
+		play = new Image(new Texture(Gdx.files.internal("image/play.png")));
+		play.setSize(32, 32);
+		play.setPosition(0, 0);
+		play.setVisible(false);
+		play.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				System.out.println("play game");
+				return true;
+			}
+
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				onPause = false;
+				pause.setVisible(true);
+				play.setVisible(false);
+				if (dialogMenu != null) {
+					dialogMenu.remove();
+					dialogMenu = null;
+				}
+			}
+		});
+		stage.addActor(pause);
+		stage.addActor(play);
+
 	}
 
 	private void createTowerAbilityImage() {
-		sell = new Image(new Texture(Gdx.files.internal("image/badge1.png")));
+		sell = new Image(new Texture(Gdx.files.internal("image/coin.png")));
 		sell.setSize(32, 32);
 		sell.setVisible(false);
 		sell.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				System.out.println("sell: " + x + ";" + y);
 				return true;
 
 			}
@@ -150,6 +285,7 @@ public class SceenMap extends BaseScreen {
 					int pointer, int button) {
 				System.out.println("sell");
 				if (currChoseTower != null) {
+					currGold += currChoseTower.sold();
 					ArrTower.remove(currChoseTower);
 					stage.getRoot().removeActor(currChoseTower);
 					currChoseTower = null;
@@ -157,13 +293,12 @@ public class SceenMap extends BaseScreen {
 			}
 		});
 
-		upgrade = new Image(new Texture(Gdx.files.internal("image/badge5.png")));
+		upgrade = new Image(new Texture(Gdx.files.internal("image/up.png")));
 		upgrade.setSize(32, 32);
 		upgrade.setVisible(false);
 		upgrade.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
-				System.out.println("upgrade: " + x + ";" + y);
 				return true;
 
 			}
@@ -172,13 +307,20 @@ public class SceenMap extends BaseScreen {
 					int pointer, int button) {
 				System.out.println("upgrade");
 				if (currChoseTower != null) {
-					currChoseTower.upgrade(currChoseTower.getLevel() + 1);
+					if (currGold >= currChoseTower.getUpgradeCost()) {
+						currGold -= currChoseTower.getUpgradeCost();
+						currChoseTower.upgrade();
+						upgrade.setVisible(false);
+						max_upgrade.setVisible(true);
+					}else {
+						// TODO:not enough gold
+					}
 				}
 			}
 		});
 
-		max_upgrade = new Image(new Texture(
-				Gdx.files.internal("image/badge1.png")));
+		max_upgrade = new Image(
+				new Texture(Gdx.files.internal("image/max.png")));
 		max_upgrade.setSize(32, 32);
 		max_upgrade.setVisible(false);
 
@@ -232,7 +374,7 @@ public class SceenMap extends BaseScreen {
 				int colTower = (int) (x + 800 - 64 * 5 - 40) / 32;
 				int rowTower = (int) y / 32;
 				if (onTowerDrag) {
-					createTower(1, colTower, rowTower);
+					createTower(0, colTower, rowTower);
 				}
 				onTowerDrag = false;
 			}
@@ -511,7 +653,7 @@ public class SceenMap extends BaseScreen {
 	}
 
 	private void spawnEnemy() {
-		EnemyImage enemy = new EnemyImage(getAtlas());
+		EnemyImage enemy = new EnemyImage(getAtlas(), 0);
 		enemy.setTileMap(tiledMap, tileMapRenderer, passLayer);
 		ArrEnemy.add(enemy);
 		stage.addActor(enemy);
@@ -521,12 +663,19 @@ public class SceenMap extends BaseScreen {
 	public void createTower(int type, int col, int row) {
 		// check valid position
 		if (!checkTowerPosition(col, row)) {
-			System.out.println("duplicate tower");
+			System.out.println("position invalid");
 			return;
 		}
-
 		// create tower
 		final TowerImage tower = new TowerImage(getAtlas(), type, col, row);
+
+		if (this.currGold < tower.getCost()) {
+			// TODO:
+			return;
+		}
+		
+		this.currGold -= tower.getCost();
+
 		tower.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
 					int pointer, int button) {
@@ -545,8 +694,11 @@ public class SceenMap extends BaseScreen {
 	}
 
 	public boolean checkTowerPosition(int col, int row) {
-
-		// TODO: check tiled map
+		try {
+			buildLayer.getCell(col, row).getTile().getProperties();
+		} catch (Exception e) {
+			return false;
+		}
 
 		for (TowerImage tower : ArrTower) {
 			if (tower.getCol() == col && tower.getRow() == row) {
@@ -557,54 +709,68 @@ public class SceenMap extends BaseScreen {
 	}
 
 	public void createBuilding() {
-
+		// TODO
 	}
-	public void setTowerFunction(boolean show){
+
+	public void setTowerFunction(boolean show) {
 		if (!show) {
 			sell.setVisible(false);
 			upgrade.setVisible(false);
-			return ;
+			max_upgrade.setVisible(false);
+			return;
 		}
-		
+
 		if (currChoseTower != null) {
 			int sellCol = currChoseTower.getCol() * 32;
 			int sellRow = currChoseTower.getRow() * 32;
 			int upgradeCol = currChoseTower.getCol() * 32;
 			int upgradeRow = currChoseTower.getRow() * 32;
+
+			Image up;
 			sell.setVisible(true);
-			upgrade.setVisible(true);
+			if (currChoseTower.isMaxLevel()) {
+				up = max_upgrade;
+				upgrade.setVisible(false);
+			} else {
+				up = upgrade;
+				max_upgrade.setVisible(false);
+			}
+			up.setVisible(true);
 			if (currChoseTower.getCol() == 0) {
 				if (currChoseTower.getRow() == 14) {
 					sell.setPosition(sellCol, sellRow - 32);
-					upgrade.setPosition(upgradeCol + 32, upgradeRow);
+					up.setPosition(upgradeCol + 32, upgradeRow);
 				} else {
 					sell.setPosition(sellCol, sellRow + 32);
-					upgrade.setPosition(upgradeCol + 32, upgradeRow);
+					up.setPosition(upgradeCol + 32, upgradeRow);
 				}
 			} else if (currChoseTower.getCol() == 24) {
 				if (currChoseTower.getRow() == 14) {
 					sell.setPosition(sellCol - 32, sellRow);
-					upgrade.setPosition(upgradeCol, upgradeRow - 32);
+					up.setPosition(upgradeCol, upgradeRow - 32);
 				} else {
 					sell.setPosition(sellCol - 32, sellRow);
-					upgrade.setPosition(upgradeCol, upgradeRow + 32);
+					up.setPosition(upgradeCol, upgradeRow + 32);
 				}
 			} else {
 				sell.setPosition(sellCol - 32, sellRow);
-				upgrade.setPosition(upgradeCol + 32, upgradeRow);
+				up.setPosition(upgradeCol + 32, upgradeRow);
 			}
 
 		} else {
 			sell.setVisible(false);
 			upgrade.setVisible(false);
+			max_upgrade.setVisible(false);
 		}
 	}
+
 	@Override
 	public void render(float delta) {
 		
 		if (onPause) {
+			System.out.println("onPause");
 			cam.update();
-
+			
 			tileMapRenderer.setView(cam);
 			tileMapRenderer.render();
 
@@ -613,7 +779,6 @@ public class SceenMap extends BaseScreen {
 			stage.draw();
 			return;
 		}
-		
 		if (TimeUtils.nanoTime() - lastEnemySpawnTime > 2000000000) {
 			spawnEnemy();
 		}
@@ -624,12 +789,14 @@ public class SceenMap extends BaseScreen {
 			if (enemy.isSuccess() || !enemy.isAlive()) {
 				if (enemy.isSuccess()) {
 					// TODO: life lost
-				}else {
+					this.currLive -= 1;
+				} else {
 					// TODO: gold bonus
+					this.currGold += enemy.getGold();
 				}
 				stage.getRoot().removeActor(enemy);
 				iter.remove();
-				
+
 			}
 		}
 
@@ -661,11 +828,17 @@ public class SceenMap extends BaseScreen {
 		if (onTowerDrag) {
 			int start_x = ((int) (towerX + 16) / 32) * 32;
 			int start_y = ((int) (towerY + 16) / 32) * 32;
+			int col_x = (int) (towerX + 16) / 32;
+			int row_y = (int) (towerY + 16) / 32;
 			Gdx.gl.glEnable(GL20.GL_BLEND);
 			Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
 			renderTowerFoot.setProjectionMatrix(cam.combined);
 			renderTowerFoot.begin(ShapeType.Filled);
-			renderTowerFoot.setColor(1, 0, 0, 0.4f);
+			if (checkTowerPosition(col_x, row_y)) {
+				renderTowerFoot.setColor(0, 178, 191, 0.4f);
+			} else {
+				renderTowerFoot.setColor(1, 0, 0, 0.4f);
+			}
 			renderTowerFoot.rect(start_x, start_y, 32, 32);
 			renderTowerFoot.end();
 			Gdx.gl.glDisable(GL20.GL_BLEND);
@@ -673,13 +846,15 @@ public class SceenMap extends BaseScreen {
 
 		this.getBatch().setProjectionMatrix(cam.combined);
 		this.getBatch().begin();
-		this.getFont().draw(this.getBatch(), "10 life", 40, 470);
+		this.getFont().draw(this.getBatch(), this.currLive + " life", 40, 470);
+		this.getFont().draw(this.getBatch(), this.currGold + " $", 740, 470);
 		if (onTowerDrag) {
 			getBatch().draw(towerImage, towerX, towerY, 32, 32);
 		}
 		this.getBatch().end();
 
 		healthdrawer.draw(ArrEnemy, cam);
+		
 		Iterator<TowerImage> iterTower = ArrTower.iterator();
 		while (iterTower.hasNext()) {
 			TowerImage tower = (TowerImage) iterTower.next();

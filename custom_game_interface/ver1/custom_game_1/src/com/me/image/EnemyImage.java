@@ -10,6 +10,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.me.image.MyAtlasRegion;
+import com.me.setting.GameSpecific;
 
 public class EnemyImage extends Image {
 	public final static int UP = 0;
@@ -19,9 +20,6 @@ public class EnemyImage extends Image {
 
 	final static int HEIGHT = 32;
 	final static int WIDTH = 32;
-
-	final static int FAST = 300;
-	final static int SLOW = 100;
 
 	final static float F_FrameDura = 0.25f;
 	final static float S_FrameDura = 0.5f;
@@ -37,7 +35,7 @@ public class EnemyImage extends Image {
 	float stateTime = 0;
 
 	private float FrameDura = S_FrameDura;
-	private int speed = SLOW;
+
 	private int direction = RIGHT;
 	private boolean isStanding = true;
 
@@ -47,13 +45,18 @@ public class EnemyImage extends Image {
 	TiledMapRenderer tileMapRenderer;
 	TiledMapTileLayer passLayer;
 	MapLayer layer;
+	
+	int TYPE;
+	float health;
+	float currHealth;
+	float speed;
+	int gold;
 
-	float originHealth = 100;
-	float currHealth = 100;
-
-	public EnemyImage(TextureAtlas atlas) {
+	public EnemyImage(TextureAtlas atlas, int type) {
 		super(atlas.findRegion("anim/phai", 1));
-
+		
+		this.TYPE=type;
+		
 		this.setSize(WIDTH, HEIGHT);
 		this.setPosition(0, 10 * 32); // xuat phat tai o [0][10]
 
@@ -81,8 +84,17 @@ public class EnemyImage extends Image {
 		DownAnimation = new Animation(FrameDura, DownWalking);
 		LeftAnimation = new Animation(FrameDura, LeftWalking);
 		RightAnimation = new Animation(FrameDura, RightWalking);
+		
+		setAttr();
 	}
-
+	
+	public void setAttr(){
+		this.health = GameSpecific.hitPoint[this.TYPE];
+		this.currHealth = GameSpecific.hitPoint[this.TYPE];
+		this.speed = GameSpecific.speed[this.TYPE];
+		this.gold = GameSpecific.bonus[this.TYPE];
+	}
+	
 	public void setTileMap(TiledMap tiledMap, TiledMapRenderer tileMapRenderer,
 			TiledMapTileLayer passLayer) {
 		this.tiledMap = tiledMap;
@@ -116,16 +128,6 @@ public class EnemyImage extends Image {
 
 	private void setSuccess(boolean success) {
 		this.success = success;
-	}
-
-	public void setFast() {
-		speed = FAST;
-		FrameDura = F_FrameDura;
-	}
-
-	public void setSlow() {
-		speed = SLOW;
-		FrameDura = S_FrameDura;
 	}
 
 	public void setSpeed(int s) {
@@ -305,7 +307,7 @@ public class EnemyImage extends Image {
 	}
 
 	public float getHealthyRate() {
-		return (float) currHealth / originHealth;
+		return (float) currHealth / health;
 	}
 
 	public float getHelthy() {
@@ -334,5 +336,9 @@ public class EnemyImage extends Image {
 
 	public float getCenterY() {
 		return this.getY() + 16;
+	}
+
+	public int getGold() {
+		return this.gold;
 	}
 }

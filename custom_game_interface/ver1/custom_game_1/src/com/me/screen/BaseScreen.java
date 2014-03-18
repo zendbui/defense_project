@@ -21,7 +21,7 @@ public abstract class BaseScreen implements Screen {
 
 	private BitmapFont font;
 	private SpriteBatch batch;
-	private TextureAtlas atlas;
+	protected TextureAtlas atlas;
 	private Skin skin;
 
 	public BaseScreen(DefenseGame game) {
