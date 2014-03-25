@@ -1,0 +1,222 @@
+
+unamed.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+gru2
+  rotate: false
+  xy: 1, 51
+  size: 41, 72
+  orig: 41, 72
+  offset: 0, 0
+  index: -1
+gru
+  rotate: false
+  xy: 44, 59
+  size: 44, 64
+  orig: 44, 64
+  offset: 0, 0
+  index: -1
+minion_happy
+  rotate: false
+  xy: 90, 75
+  size: 55, 48
+  orig: 55, 48
+  offset: 0, 0
+  index: -1
+minion_duck
+  rotate: false
+  xy: 147, 75
+  size: 54, 48
+  orig: 54, 48
+  offset: 0, 0
+  index: -1
+minion_shout
+  rotate: false
+  xy: 203, 75
+  size: 52, 48
+  orig: 52, 48
+  offset: 0, 0
+  index: -1
+minion_bananas
+  rotate: false
+  xy: 257, 75
+  size: 51, 48
+  orig: 51, 48
+  offset: 0, 0
+  index: -1
+minion_golf
+  rotate: false
+  xy: 310, 75
+  size: 49, 48
+  orig: 49, 48
+  offset: 0, 0
+  index: -1
+minion_big
+  rotate: false
+  xy: 361, 75
+  size: 46, 48
+  orig: 46, 48
+  offset: 0, 0
+  index: -1
+minion_kungfu
+  rotate: false
+  xy: 409, 75
+  size: 46, 48
+  orig: 46, 48
+  offset: 0, 0
+  index: -1
+agnes_happy
+  rotate: false
+  xy: 457, 75
+  size: 46, 48
+  orig: 46, 48
+  offset: 0, 0
+  index: -1
+agnes_overjoyed
+  rotate: false
+  xy: 505, 75
+  size: 44, 48
+  orig: 44, 48
+  offset: 0, 0
+  index: -1
+minion_angry
+  rotate: false
+  xy: 551, 75
+  size: 44, 48
+  orig: 44, 48
+  offset: 0, 0
+  index: -1
+minion_dancing
+  rotate: false
+  xy: 597, 75
+  size: 44, 48
+  orig: 44, 48
+  offset: 0, 0
+  index: -1
+minion_girl
+  rotate: false
+  xy: 643, 75
+  size: 42, 48
+  orig: 42, 48
+  offset: 0, 0
+  index: -1
+minion_cake
+  rotate: false
+  xy: 1, 1
+  size: 41, 48
+  orig: 41, 48
+  offset: 0, 0
+  index: -1
+minion_evil
+  rotate: false
+  xy: 44, 9
+  size: 40, 48
+  orig: 40, 48
+  offset: 0, 0
+  index: -1
+minion_tongue
+  rotate: false
+  xy: 687, 75
+  size: 40, 48
+  orig: 40, 48
+  offset: 0, 0
+  index: -1
+minion_evil2
+  rotate: false
+  xy: 729, 75
+  size: 36, 48
+  orig: 36, 48
+  offset: 0, 0
+  index: -1
+minion_write
+  rotate: false
+  xy: 767, 75
+  size: 36, 48
+  orig: 36, 48
+  offset: 0, 0
+  index: -1
+minion_sad
+  rotate: false
+  xy: 805, 75
+  size: 34, 48
+  orig: 34, 48
+  offset: 0, 0
+  index: -1
+minion_evil_run
+  rotate: false
+  xy: 841, 75
+  size: 34, 48
+  orig: 34, 48
+  offset: 0, 0
+  index: -1
+minion_wave
+  rotate: false
+  xy: 877, 75
+  size: 34, 48
+  orig: 34, 48
+  offset: 0, 0
+  index: -1
+minion_maid
+  rotate: false
+  xy: 913, 75
+  size: 31, 48
+  orig: 31, 48
+  offset: 0, 0
+  index: -1
+minion_please
+  rotate: false
+  xy: 946, 75
+  size: 31, 48
+  orig: 31, 48
+  offset: 0, 0
+  index: -1
+minion_amazed
+  rotate: false
+  xy: 979, 75
+  size: 30, 48
+  orig: 30, 48
+  offset: 0, 0
+  index: -1
+edith
+  rotate: false
+  xy: 86, 9
+  size: 21, 48
+  orig: 21, 48
+  offset: 0, 0
+  index: -1
+minion_fruit
+  rotate: false
+  xy: 109, 25
+  size: 29, 48
+  orig: 29, 48
+  offset: 0, 0
+  index: -1
+minion_jumping
+  rotate: false
+  xy: 140, 25
+  size: 27, 48
+  orig: 27, 48
+  offset: 0, 0
+  index: -1
+minion_curious
+  rotate: false
+  xy: 169, 25
+  size: 24, 48
+  orig: 24, 48
+  offset: 0, 0
+  index: -1
+agnes_sad
+  rotate: false
+  xy: 195, 25
+  size: 18, 48
+  orig: 18, 48
+  offset: 0, 0
+  index: -1
+margo
+  rotate: false
+  xy: 215, 25
+  size: 16, 48
+  orig: 16, 48
+  offset: 0, 0
+  index: -1

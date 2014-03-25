@@ -1,0 +1,61 @@
+
+tower.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+tower4circle
+  rotate: false
+  xy: 1, 229
+  size: 210, 226
+  orig: 210, 226
+  offset: 0, 0
+  index: -1
+tower2circle
+  rotate: false
+  xy: 1, 1
+  size: 210, 226
+  orig: 210, 226
+  offset: 0, 0
+  index: -1
+tower1circle
+  rotate: false
+  xy: 213, 229
+  size: 210, 226
+  orig: 210, 226
+  offset: 0, 0
+  index: -1
+tower3circle
+  rotate: false
+  xy: 213, 1
+  size: 210, 226
+  orig: 210, 226
+  offset: 0, 0
+  index: -1
+tower2
+  rotate: false
+  xy: 425, 279
+  size: 137, 176
+  orig: 137, 176
+  offset: 0, 0
+  index: -1
+tower4
+  rotate: false
+  xy: 425, 107
+  size: 132, 170
+  orig: 132, 170
+  offset: 0, 0
+  index: -1
+tower3
+  rotate: false
+  xy: 564, 309
+  size: 104, 146
+  orig: 104, 146
+  offset: 0, 0
+  index: -1
+tower1
+  rotate: false
+  xy: 670, 312
+  size: 90, 143
+  orig: 90, 143
+  offset: 0, 0
+  index: -1
