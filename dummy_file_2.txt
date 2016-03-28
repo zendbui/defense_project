@@ -1,0 +1,10 @@
+git checkout
+
+The git checkout command lets you navigate between the branches created by git branch. 
+Checking out a branch updates the files in the working directory to match the version stored in that branch, 
+and it tells Git to record all new commits on that branch. 
+Think of it as a way to select which line of development youÅfre working on.
+
+In the previous module, we saw how git checkout can be used to view old commits.
+Checking out branches is similar in that the working directory is updated to match the selected branch/revision; 
+however, new changes are saved in the project history?that is, itÅfs not a read-only operation.
