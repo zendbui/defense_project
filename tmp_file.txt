@@ -1,1 +1,3 @@
 feature/test3
+add some text
+text from feature/test3_2
